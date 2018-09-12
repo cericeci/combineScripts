@@ -1,5 +1,5 @@
 #!/bin/bash
-#Usage: sh getNuisances.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)] [Number of parallel jobs] [EXTRA INPUT]
+#Usage: sh getNuisances.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)] [Number of parallel jobs] [OUTPUT shortname] [EXTRA INPUT]
 
 DATACARD=$1
 ASIMOV=$2
@@ -30,6 +30,9 @@ if [ "$ASIMOV" = "t1" ]; then
    ASIMOV=" -t -1 --expectSignal 1 "
 fi
 
+if [ "$OUTPUT" = "" ]; then
+   OUTPUT="fitReport"   
+fi
 
 echo "---------------------------------"
 echo "---------------------------------"

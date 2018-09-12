@@ -1,7 +1,7 @@
 #!/bin/bash
 # Mostly based on @vischia's implementation at https://github.com/vischia/stopLimits/blob/master/estimateImpact.sh
 
-# Usage: sh estimateImpact.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)] [Number of parallel jobs] [Extra commands to be feeded to combineToools]
+# Usage: sh estimateImpact.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)] [OUTPUT shortname] [Number of parallel jobs] [Extra commands to be feeded to combineToools]
 
 # Prerequisite: installing the combineTool.py tool.
 #       Method 1 (install only the script):
@@ -46,6 +46,11 @@ if [  "$JOBS" = ""  ]; then
     JOBS=4
     echo "Defaulting to 4 parallel jobs"
 fi
+
+if [ "$OUTPUT" = "" ]; then
+   OUTPUT="impacts"   
+fi
+
 
 echo "---------------------------------"
 echo "---------------------------------"
