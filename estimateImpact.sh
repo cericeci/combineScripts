@@ -9,13 +9,14 @@
 #       Method 2 (install the whole CombineHarvester):
 #                  cd $CMSSW_BASE/src
 #                  git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
-#                  scram b -j 6
+#                  scram b -j 4
 
 
 DATACARD=$1
 ASIMOV=$2
 JOBS=$3
-EXTRA=$4
+OUTPUT=$4
+EXTRA=$5
 
 if [ "$DATACARD" = "" ]; then
    echo "You need to provide a datacard!!"
@@ -33,7 +34,7 @@ fi
 
 if [ "$ASIMOV" = "t0" ]; then
    echo "Using background-only Asimov dataset"
-   ASIMOV=" -t -1 --expectSignal 0 "
+   ASIMOV=" -t -1 --expectSignal 0 --rMin -0.1"
 fi
 
 if [ "$ASIMOV" = "t1" ]; then
@@ -79,9 +80,9 @@ combineTool.py -M Impacts -d ${DATACARD} --robustFit 1 --doFits --parallel $JOBS
 echo "Third Stage: collect outputs"
 echo "----------------------------"
 
-combineTool.py -M Impacts -d ${DATACARD} -o impacts.json $ASIMOV $EXTRA -m 1
+combineTool.py -M Impacts -d ${DATACARD} -o $OUTPUT.json $ASIMOV $EXTRA -m 1
 
 echo "Fourth Stage: plot pulls an impacts"
 echo "------------------------------------"
 
-plotImpacts.py -i impacts.json -o impacts
+plotImpacts.py -i impacts.json -o $OUTPUT
