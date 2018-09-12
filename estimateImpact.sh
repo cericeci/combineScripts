@@ -1,7 +1,7 @@
 #!/bin/bash
 # Mostly based on @vischia's implementation at https://github.com/vischia/stopLimits/blob/master/estimateImpact.sh
 
-# Usage: sh estimateImpact.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)] [OUTPUT shortname] [Number of parallel jobs] [Extra commands to be feeded to combineToools]
+# Usage: sh estimateImpact.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)] [Number of parallel jobs]  [OUTPUT shortname] [Extra commands to be feeded to combineToools]
 
 # Prerequisite: installing the combineTool.py tool.
 #       Method 1 (install only the script):
@@ -30,16 +30,19 @@ fi
 if [ "$ASIMOV" = "d" ]; then
    echo "Using data"
    ASIMOV=""
+   PREFIX="d"
 fi
 
 if [ "$ASIMOV" = "t0" ]; then
    echo "Using background-only Asimov dataset"
-   ASIMOV=" -t -1 --expectSignal 0 --rMin -0.1"
+   ASIMOV=" -t -1 --expectSignal 0 --rMin -10"
+   PREFIX="t0"
 fi
 
 if [ "$ASIMOV" = "t1" ]; then
    echo "Using signal + background Asimov dataset"
    ASIMOV=" -t -1 --expectSignal 1 "
+   PREFIX="t1"
 fi
 
 if [  "$JOBS" = ""  ]; then
@@ -74,20 +77,23 @@ fi
 echo "First Stage: fit for each POI"
 echo "-----------------------------"
 
-combineTool.py -M Impacts -d ${DATACARD} --doInitialFit --robustFit 1 $ASIMOV $EXTRA -m 1
+combineTool.py -M Impacts -d ${DATACARD} --doInitialFit --robustFit 1 $ASIMOV $EXTRA -m 1 -n $PREFIX
 
 
 echo "Second Stage: fit scan for each nuisance parameter"
 echo "--------------------------------------------------"
 
-combineTool.py -M Impacts -d ${DATACARD} --robustFit 1 --doFits --parallel $JOBS $ASIMOV $EXTRA -m 1
+combineTool.py -M Impacts -d ${DATACARD} --robustFit 1 --doFits --parallel $JOBS $ASIMOV $EXTRA -m 1 -n $PREFIX 
 
 echo "Third Stage: collect outputs"
 echo "----------------------------"
 
-combineTool.py -M Impacts -d ${DATACARD} -o $OUTPUT.json $ASIMOV $EXTRA -m 1
+combineTool.py -M Impacts -d ${DATACARD} -o $OUTPUT/impacts$PREFIX.json $ASIMOV $EXTRA -m 1 -n $PREFIX
 
-echo "Fourth Stage: plot pulls an impacts"
+echo "Fourth Stage: plot pulls and impacts"
 echo "------------------------------------"
 
-plotImpacts.py -i impacts.json -o $OUTPUT
+plotImpacts.py -i $OUTPUT/impacts$PREFIX.json -o $OUTPUT/impacts$PREFIX
+
+mv ./higgsCombine_paramFit_$PREFIX*root $OUTPUT
+mv ./higgsCombine_initialFit_$PREFIX*root $OUTPUT
