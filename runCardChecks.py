@@ -3,7 +3,7 @@ from optparse import OptionParser
 
 parser = OptionParser(usage="%prog [options]")
 parser.add_option("-m", "--modules", dest="modules",  type="string", default=[], action="append", help="Run these modules (impacts, closure, covariances). If none is provided it will run everything.");
-parser.add_option("-j", "--jobs", dest="jobs", type="int", default=4, help="Number of paralell jobs that are allowed at the same time")
+parser.add_option("-j", "--jobs", dest="jobs", type="int", default=1, help="Number of paralell jobs that are allowed at the same time")
 parser.add_option("-d", "--datacard", dest="datacards", type="string", default=[], action="append", help="Datacards for which the checks will be run")
 parser.add_option("-o", "--outdir", dest="outdir", type="string", default="./temp/", help="Output directory for the summarized results")
 parser.add_option("-n", "--nosave", dest="nosave", action="store_true", default=False, help="If active, no directory is created, only the commands are run")
@@ -55,11 +55,17 @@ class datacardChecks(object):
                 self.jobs.append("sh estimateImpact.sh [DATACARD] [ASIMOV] [JOBS] [OUTPUT] [EXTRA]".replace("[DATACARD]", self.options.datacard).replace("[ASIMOV]", asi).replace("[JOBS]", str(self.options.jobs)).replace("[EXTRA]", self.options.extra).replace("[OUTPUT]", self.outDir + "/Impacts/"))
             if self.doclosure:
                 self.jobs.append("sh getNuisances.sh [DATACARD] [ASIMOV] [OUTPUT] [EXTRA]".replace("[DATACARD]", self.options.datacard).replace("[ASIMOV]", asi).replace("[OUTPUT]", self.outDir + "/Closure/").replace("[EXTRA]", self.options.extra))
+            if self.docovariances:
+                self.jobs.append("sh getCovariances.sh [DATACARD] [ASIMOV] [OUTPUT] [EXTRA]".replace("[DATACARD]", self.options.datacard).replace("[ASIMOV]", asi).replace("[OUTPUT]", self.outDir + "/Covariances/").replace("[EXTRA]", self.options.extra))
+                self.jobs.append(" root -l \'drawPlot.C(\"%s/fitDiagnostics_%s.root\",\"shapes_prefit/overall_total_covar\", \"%s/prefit_%s_covar.pdf\")\' -b -q"%( self.outDir+"/Covariances/", asi, self.outDir+"/Covariances/", asi))
+                self.jobs.append(" root -l \'drawPlot.C(\"%s/fitDiagnostics_%s.root\",\"shapes_fit_s/overall_total_covar\", \"%s/fits_%s_covar.pdf\")\' -b -q"%( self.outDir+"/Covariances/", asi, self.outDir+"/Covariances/", asi))
+                self.jobs.append(" root -l \'drawPlot.C(\"%s/fitDiagnostics_%s.root\",\"shapes_fit_b/overall_total_covar\", \"%s/fitb_%s_covar.pdf\")\' -b -q"%( self.outDir+"/Covariances/", asi, self.outDir+"/Covariances/", asi))
 
     def runJobs(self):
         for j in self.jobs:
             if not(self.options.pretend): os.system(j)  
             else: print(j)
+
 
 for d in options.datacards:
     options.datacard = d

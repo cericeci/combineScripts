@@ -1,5 +1,5 @@
 #!/bin/bash
-#Usage: sh getNuisances.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)]  [OUTPUT shortname] [EXTRA INPUT]
+#Usage: sh getCovariances.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)]  [OUTPUT shortname] [EXTRA INPUT]
 
 DATACARD=$1
 ASIMOV=$2
@@ -55,12 +55,14 @@ cd $OUTPUT
 echo "---------------------------------"
 echo "---------------------------------"
 
-combine -M FitDiagnostics $ASIMOV $HERE/$DATACARD $EXTRA --forceRecreateNLL
+combine -M FitDiagnostics $ASIMOV $HERE/$DATACARD $EXTRA --forceRecreateNLL  --saveWithUncertainties --saveOverallShapes --numToysForShapes 200 --plots
 
-echo "Run nuisances for datacard $DATACARD. Additional toy options are set to $ASIMOV. Extra parameters to be passed to combine are: $EXTRA" >> ./fitResults$PREFIX
-python $CMSSW_BASE/src/HiggsAnalysis/CombinedLimit/test/diffNuisances.py  -a fitDiagnostics.root -g plots.root >> ./fitResults$PREFIX
-mv plots.root plots_$PREFIX.root
 mv fitDiagnostics.root fitDiagnostics_$PREFIX.root
 mv higgsCombineTest.FitDiagnostics.mH120.root higgsCombineTest.FitDiagnostics.mH120_$PREFIX.root
+mv covariance_fit_b.png covariance_fit_b_$PREFIX.png
+mv covariance_fit_s.png covariance_fit_s_$PREFIX.png
+mkdir ./$PREFIX_dists/
+mv *fit_s.png ./$PREFIX_dists/
+mv *fit_b.png ./$PREFIX_dists/
 cp $HERE/$DATACARD ./
 cd $HERE

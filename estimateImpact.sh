@@ -17,7 +17,9 @@ ASIMOV=$2
 JOBS=$3
 OUTPUT=$4
 EXTRA=$5
+HERE="$PWD/"
 
+ 
 if [ "$DATACARD" = "" ]; then
    echo "You need to provide a datacard!!"
    exit
@@ -54,6 +56,8 @@ if [ "$OUTPUT" = "" ]; then
    OUTPUT="impacts"   
 fi
 
+cd $OUTPUT
+
 
 echo "---------------------------------"
 echo "---------------------------------"
@@ -67,7 +71,7 @@ echo "---------------------------------"
 if [[ "$DATACARD" != *"root"* ]]; then
    echo "Preliminary: convert to rootspace"
    echo "---------------------------------"
-   text2workspace.py ${DATACARD}
+   text2workspace.py $HERE/${DATACARD}
    DATACARD="${DATACARD//.txt/.root}"
    echo "Card is $DATACARD"
 fi
@@ -77,23 +81,23 @@ fi
 echo "First Stage: fit for each POI"
 echo "-----------------------------"
 
-combineTool.py -M Impacts -d ${DATACARD} --doInitialFit --robustFit 1 $ASIMOV $EXTRA -m 1 -n $PREFIX
+combineTool.py -M Impacts -d $HERE/${DATACARD} --doInitialFit --robustFit 1 $ASIMOV $EXTRA -m 1 -n $PREFIX
 
 
 echo "Second Stage: fit scan for each nuisance parameter"
 echo "--------------------------------------------------"
 
-combineTool.py -M Impacts -d ${DATACARD} --robustFit 1 --doFits --parallel $JOBS $ASIMOV $EXTRA -m 1 -n $PREFIX 
+combineTool.py -M Impacts -d $HERE/${DATACARD} --robustFit 1 --doFits --parallel $JOBS $ASIMOV $EXTRA -m 1 -n $PREFIX 
 
 echo "Third Stage: collect outputs"
 echo "----------------------------"
 
-combineTool.py -M Impacts -d ${DATACARD} -o $OUTPUT/impacts$PREFIX.json $ASIMOV $EXTRA -m 1 -n $PREFIX
+combineTool.py -M Impacts -d $HERE/${DATACARD} -o impacts$PREFIX.json $ASIMOV $EXTRA -m 1 -n $PREFIX
 
 echo "Fourth Stage: plot pulls and impacts"
 echo "------------------------------------"
 
-plotImpacts.py -i $OUTPUT/impacts$PREFIX.json -o $OUTPUT/impacts$PREFIX
+plotImpacts.py -i impacts$PREFIX.json -o impacts$PREFIX
 
-mv ./higgsCombine_paramFit_$PREFIX*root $OUTPUT
-mv ./higgsCombine_initialFit_$PREFIX*root $OUTPUT
+cp $HERE/$DATACARD ./
+cd $HERE
