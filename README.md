@@ -1,5 +1,9 @@
 Repository containing several scripts to automate checks on the fits performed with the Combine RooStats tool
 
+- Running all the tests
+
+python runCardChecks.py -d [DATACARD] -o [OUTPUT]
+
 - Running the impacts for a given datacard:
 
 sh estimateImpact.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)] [OUTPUT shortname] [Number of parallel jobs] [Extra commands to be feeded to combineToools]
@@ -9,3 +13,6 @@ sh estimateImpact.sh [DATACARD NAME] [What to use as data: d (data), t0 (backgro
 sh getNuisances.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)] [Number of parallel jobs] [OUTPUT shortname] [EXTRA INPUT]
 
 
+- Obtaining the covariance matrices on the Asimov dataset:
+
+sh getCovariances.sh [DATACARD NAME] [What to use as data: d (data), t0 (background only Asimov), t1 (s+b Asimov)] [Number of parallel jobs] [OUTPUT shortname] [EXTRA INPUT]
