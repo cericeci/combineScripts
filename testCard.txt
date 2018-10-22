@@ -1,0 +1,46 @@
+## Datacard for cut file ./wzsm/cuts_wzsm.txt (signal prompt_WZ)
+## Event selection: 
+##   alwaystrue : 1
+##   filters : $DATA{(Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_HBHENoiseIsoFilter && Flag_HBHENoiseFilter && Flag_eeBadScFilter && Flag_goodVertices && Flag_globalTightHalo2016Filter && Flag_badChargedHadronFilter)} $MC{1}
+##   triggers : $DATA{(Triggers_ee || Triggers_mm || Triggers_em)} $MC{(Triggers_ee || Triggers_mm || Triggers_em)}
+##   threelightlep : nLepSel>=3 && abs(LepSel1_pdgId)<14 && abs(LepSel2_pdgId)<14 && abs(LepSel3_pdgId)<14
+##   MVAVT : LepSel1_isTight && LepSel2_isTight && LepSel3_isTight
+##   ptWZ : LepZ1_pt>25 && LepZ2_pt>10 && LepW_pt>25
+##   lowMll : minMllAFAS > 4
+##   hasOSSF : nOSSF>0
+##   SR : met_pt > 30    && nBJetMedium30 == 0 && abs(91.1876-mll_3l)<15  &&  nLepSel<4  && m3L > 100
+##   SRnobtag : met_pt > 30    && abs(91.1876-mll_3l)<15  &&  nLepSel<4  && m3L > 100
+##   SRnomll : met_pt > 30    && nBJetMedium30 == 0 &&  nLepSel<4  && m3L > 100
+##   SRnomet : nBJetMedium30 == 0 && abs(91.1876-mll_3l)<15  &&  nLepSel<4  && m3L > 100
+##   SRnom3L : met_pt > 30    && nBJetMedium30 == 0 && nLepSel<4 && abs(91.1876-mll_3l)
+shapes *        * ./testCard.root x_$PROCESS x_$PROCESS_$SYSTEMATIC
+##----------------------------------
+bin         cuts_wzsm
+observation 3831.0
+##----------------------------------
+##----------------------------------
+bin                   cuts_wzsm        cuts_wzsm        cuts_wzsm        cuts_wzsm        cuts_wzsm        cuts_wzsm        cuts_wzsm        cuts_wzsm 
+process          fakes_appldata       prompt_ZZH            convs        rares_ttX        rares_VVV         rares_VH        rares_tZq        prompt_WZ 
+process                       1                2                3                4                5                6                7                0 
+rate                    155.212          296.622           54.321           63.603           43.464           29.708           31.053         2823.720 
+##----------------------------------
+convs_ML     lnN              -                -              1.2                -                -                -                -                - 
+normTTX_ML   lnN              -                -                -             1.15                -                -                -                - 
+normtZq_ML   lnN              -                -                -                -                -                -             1.35                - 
+fakes_ML     lnN            1.3                -                -                -                -                -                -                - 
+normVVV_ML   lnN              -                -                -                -              1.5                -                -                - 
+normVH_ML    lnN              -                -                -                -                -             1.25                -                - 
+lumi_ML      lnN              -            1.025            1.025            1.025            1.025            1.025            1.025            1.025 
+normZZH_ML   lnN              -             1.07                -                -                -                -                -                - 
+trigeff_ML   lnN              -      0.982/1.014      0.982/1.014      0.982/1.014      0.982/1.014      0.982/1.014      0.982/1.014      0.982/1.014 
+ewkfakes_ML shape              1                -                -                -                -                -                -                - 
+LepSFEl_ML shape              -                1                1                1                1                1                1                1 
+ElScale_ML shape              -                1                1                1                1                1                1                1 
+MuScale_ML shape              -                1                1                1                1                1                1                1 
+JES_ML     shape              -                1                1                1                1                1                1                1 
+PUW_ML     shape              -                1                1                1                1                1                1                1 
+btag_HF_ML shape              -                1                1                1                1                1                1                1 
+ewksub_ML  shape              -                -                -                -                -                -                -                - 
+btag_LF_ML shape              -                1                1                1                1                1                1                1 
+LepSFMu_ML shape              -                1                1                1                1                1                1                1 
+* autoMCStats 0 
