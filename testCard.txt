@@ -13,7 +13,7 @@
 ##   SRnomll : met_pt > 30    && nBJetMedium30 == 0 &&  nLepSel<4  && m3L > 100
 ##   SRnomet : nBJetMedium30 == 0 && abs(91.1876-mll_3l)<15  &&  nLepSel<4  && m3L > 100
 ##   SRnom3L : met_pt > 30    && nBJetMedium30 == 0 && nLepSel<4 && abs(91.1876-mll_3l)
-shapes *        * ./testCard.root x_$PROCESS x_$PROCESS_$SYSTEMATIC
+shapes *        * ./testCard.input.root x_$PROCESS x_$PROCESS_$SYSTEMATIC
 ##----------------------------------
 bin         cuts_wzsm
 observation 3831.0
@@ -40,7 +40,6 @@ MuScale_ML shape              -                1                1               
 JES_ML     shape              -                1                1                1                1                1                1                1 
 PUW_ML     shape              -                1                1                1                1                1                1                1 
 btag_HF_ML shape              -                1                1                1                1                1                1                1 
-ewksub_ML  shape              -                -                -                -                -                -                -                - 
 btag_LF_ML shape              -                1                1                1                1                1                1                1 
 LepSFMu_ML shape              -                1                1                1                1                1                1                1 
 * autoMCStats 0 
